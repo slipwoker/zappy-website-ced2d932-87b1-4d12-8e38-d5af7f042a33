@@ -40,7 +40,9 @@ Information about WCAG compliance and accessibility features.
 
 ## How to Contact Us
 
-- (No contact details configured yet.)
+- Phone: 054-7654277. 052-2712117
+- Phone (tel): tel:05476542770522712117
+- Address: ברקן 7, נווה חורש, דימונה, ישראל
 
 ### Contact form
 - URL: https://example.com/contact
