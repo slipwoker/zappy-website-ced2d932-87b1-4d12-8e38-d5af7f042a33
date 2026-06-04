@@ -1,0 +1,76 @@
+# אור החיים הקדוש - כלים חד פעמי — Generative Engine Optimization Map
+
+> A business specializing in disposable and reusable tableware for events, parties, and holidays. The product range includes disposable and multi-use plates, hot and cold cups, bowls, disposable cutlery, and more — catering to a wide variety of celebratory occasions. The brand focuses on convenience and variety for event planning needs.
+
+---
+
+## Pages
+
+### בית
+https://example.com
+מחפש כלים חד פעמיים לאירוע הבא? אצלנו תמצא מגוון ענק של צלחות, כוסות וסכו&quot;ם לכל חגיגה. קנה עכשיו ותהנה מנוחות מקסימלית.
+
+### מוצרים ושימושים
+https://example.com/products-uses
+מחפש רעיונות לעריכת שולחן חגיגי? כנסו לעמוד המוצרים והשימושים שלנו וגלו פתרונות יצירתיים לכלים רב-פעמיים וחד-פעמיים. התחילו לתכנן עכשיו.
+
+### אודות
+https://example.com/about
+רוצים לדעת מי עומד מאחורי המגוון העצום של כלים חד פעמיים? היכנסו לעמוד אודות וגלו את התשוקה שלנו לנוחות ואיכות. הצטרפו למשפחה עוד היום.
+
+### צור קשר
+https://example.com/contact
+יש שאלה על הזמנה או צריכים המלצה לאירוע? צרו קשר עכשיו וקבלו מענה מהיר ומקצועי ממומחי הכלים החד פעמיים שלנו. אנחנו כאן בשבילכם.
+
+## Legal & Policy
+
+### Privacy Policy
+https://example.com/privacy
+Information about how user data is collected, stored, and protected.
+
+### Terms & Conditions
+https://example.com/terms
+Legal terms describing service usage, rights, and policies.
+
+### Accessibility Statement
+https://example.com/accessibility
+Information about WCAG compliance and accessibility features.
+
+---
+
+## How to Contact Us
+
+- (No contact details configured yet.)
+
+### Contact form
+- URL: https://example.com/contact
+- Endpoint: https://example.com/api/email/contact-form
+- Method: POST
+- Content-Type: application/json
+- Fields:
+  - `name` (text, required)
+  - `email` (email, required)
+  - `phone` (tel, required)
+  - `message` (textarea, required)
+  - `privacy_consent` (checkbox, required)
+
+---
+
+# Business Context (for LLM understanding)
+
+## About אור החיים הקדוש - כלים חד פעמי
+A business specializing in disposable and reusable tableware for events, parties, and holidays. The product range includes disposable and multi-use plates, hot and cold cups, bowls, disposable cutlery, and more — catering to a wide variety of celebratory occasions. The brand focuses on convenience and variety for event planning needs.
+
+## Target Audience
+- לקוחות פרטיים , לקוחות עסקיים , מוסדות וארגונים
+
+## Industry
+Party Supplies & Disposable Tableware
+
+---
+
+# Machine-readable feeds
+
+- Sitemap (XML): https://example.com/sitemap.xml
+- Robots: https://example.com/robots.txt
+- Flattened page text (for LLMs): https://example.com/llms-full.txt

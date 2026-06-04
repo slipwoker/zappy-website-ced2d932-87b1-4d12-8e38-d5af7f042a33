@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>גלו איך להפיק אירוע בלתי נשכח — אור החיים הקדוש - כלים חד פעמי</title>
+    <meta name="description" content="מחפש רעיונות לעריכת שולחן חגיגי? כנסו לעמוד המוצרים והשימושים שלנו וגלו פתרונות יצירתיים לכלים רב-פעמיים וחד-פעמיים. התחילו לתכנן עכשיו.">
+    <meta name="keywords" content="מוצרים ושימושים כלים חד פעמיים, אור החיים הקדוש - כלים חד פעמיים, רעיונות לעריכת שולחן, כלים רב פעמיים, פתרונות הגשה לאירועים">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: 'ced2d932-87b1-4d12-8e38-d5af7f042a33',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <meta property="og:title" content="גלו איך להפיק אירוע בלתי נשכח — אור החיים הקדוש - כלים חד פעמי">
+    <meta property="og:description" content="מחפש רעיונות לעריכת שולחן חגיגי? כנסו לעמוד המוצרים והשימושים שלנו וגלו פתרונות יצירתיים לכלים רב-פעמיים וחד-פעמיים. התחילו לתכנן עכשיו.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="גלו איך להפיק אירוע בלתי נשכח — אור החיים הקדוש - כלים חד פעמי">
+    <meta name="twitter:description" content="מחפש רעיונות לעריכת שולחן חגיגי? כנסו לעמוד המוצרים והשימושים שלנו וגלו פתרונות יצירתיים לכלים רב-פעמיים וחד-פעמיים. התחילו לתכנן עכשיו.">
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="he_IL">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .skip-link { position: absolute; top: 0; left: 0; transform: translateY(-200%); padding: 12px 18px; background: var(--bg-dark, #1a1a1a); color: var(--text-light, #fff); font-weight: 600; border-radius: 0 0 8px 0; z-index: 10000; }
+    .skip-link:focus { transform: none; outline: 2px solid var(--ring, #fff); outline-offset: 2px; }
+    :focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 3px; }
+  </style>
+
+
+  
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+    <script>window.ZAPPY_WEBSITE_ID = "ced2d932-87b1-4d12-8e38-d5af7f042a33"; window.ZAPPY_API_BASE = "https://api.zappy5.com";</script>
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: var(--text-dark, #333) !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+      [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 10px !important; padding-right: 28px !important; }
+      .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus (exclude catalog sub-menus that use <a> children instead of <li>) */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))):not(:has(> a)), .sub-menu:not(:has(li)):not(:has(> a)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .navbar .sub-menu.mobile-expanded, .nav-menu .sub-menu.mobile-expanded, #navMenu .sub-menu.mobile-expanded { max-height: none !important; overflow-y: visible !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-dark) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-dark) !important; white-space: normal !important; }
+        .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+        [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 0 !important; padding-right: 28px !important; }
+        .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+        .nav-menu.active, #navMenu.active { max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-dark) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      html[dir="rtl"] .whatsapp-float { right: 20px !important; left: auto !important; }
+      html[dir="ltr"] .whatsapp-float, html:not([dir]) .whatsapp-float { left: 20px !important; right: auto !important; }
+      html[dir="rtl"] #mic-access-tool-general-button, html[dir="rtl"] .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="rtl"] ._access-icon { left: 20px !important; right: auto !important; }
+      html[dir="ltr"] #mic-access-tool-general-button, html[dir="ltr"] .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="ltr"] ._access-icon,
+      html:not([dir]) #mic-access-tool-general-button, html:not([dir]) .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool #mic-access-tool-general-button,
+      html:not([dir]) ._access-icon { right: 20px !important; left: auto !important; }
+      @media (max-width: 768px) { .whatsapp-float { display: flex !important; } }
+      @media (min-width: 769px) { .whatsapp-float { display: flex !important; } }
+      @media (max-width: 768px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+      @media (min-width: 769px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+    </style>
+</head>
+<body>
+<a class="skip-link" href="#main">דלג לתוכן הראשי</a>
+  <nav class="navbar" dir="rtl">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+  
+  <button class="phone-header-btn" data-phone="[business_phone]" aria-label="Call">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+
+  <div class="nav-container">
+    <div class="nav-right-group"><div class="nav-brand">
+      <a href="/" class="logo-link"><img class="logo" src="/assets/site-----------------image-1.webp" alt="אור החיים הקדוש - כלים חד פעמי"></a>
+    </div><ul class="nav-menu" id="navMenu"><li><a href="/">בית</a></li><li><a href="/products-uses">מוצרים ושימושים</a></li><li><a href="/about">אודות</a></li></ul></div>
+    
+    
+    
+    <div class="nav-cta-container">
+      <a href="/contact" class="nav-cta-btn">צור קשר</a>
+    </div>
+  </div>
+</nav>
+<script>
+
+// Navbar Mobile Menu Toggle and Contrast Fix
+(function() {
+  // Use 'load' event instead of 'DOMContentLoaded' to ensure we run AFTER all other scripts
+  window.addEventListener('load', function() {
+    
+    // FIX MOBILE BUTTON CONTRAST
+    // Detect navbar background color and apply contrasting color to mobile buttons
+    const navbar = document.querySelector('.navbar, nav, header');
+    if (!navbar) {
+      console.log('[Navbar] Navbar element not found');
+      return;
+    }
+    
+    // DECLARE VARIABLES EARLY to avoid Temporal Dead Zone errors
+    // These are used in multiple places below
+    let mobileToggle = document.getElementById('mobileToggle') ||
+                       document.querySelector('.mobile-toggle') ||
+                       document.querySelector('.hamburger') ||
+                       document.querySelector('.hamburger-menu') ||
+                       document.querySelector('.menu-toggle') ||
+                       document.querySelector('.burger-menu') ||
+                       document.querySelector('[aria-label="Menu"]') ||
+                       document.querySelector('[aria-label="תפריט"]');
+    
+    const phoneBtn = document.querySelector('.phone-header-btn');
+    
+    const computedStyle = window.getComputedStyle(navbar);
+    let bgColor = computedStyle.backgroundColor;
+    
+    console.log('[Navbar] Initial navbar background:', bgColor);
+    
+    // Check if background is transparent or rgba with 0 alpha
+    const isTransparent = bgColor === 'transparent' || 
+                         bgColor === 'rgba(0, 0, 0, 0)' ||
+                         (bgColor.startsWith('rgba') && bgColor.includes(', 0)'));
+    
+    if (isTransparent) {
+      // Check for background-image or gradient
+      const bgImage = computedStyle.backgroundImage;
+      if (bgImage && bgImage !== 'none') {
+        console.log('[Navbar] Navbar has background image/gradient, using dark text');
+        bgColor = 'rgb(240, 240, 240)'; // Assume light background
+      } else {
+        // Transparent navbar - check body background
+        const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+        console.log('[Navbar] Navbar transparent, using body background:', bodyBg);
+        bgColor = bodyBg;
+      }
+    }
+    
+    // Calculate luminance to determine if background is light or dark
+    const rgb = bgColor.match(/\d+/g);
+    if (rgb && rgb.length >= 3) {
+      const r = parseInt(rgb[0]);
+      const g = parseInt(rgb[1]);
+      const b = parseInt(rgb[2]);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      
+      // Mobile button colors are set by Claude's AI-generated CSS (same as .nav-menu a)
+      // No dynamic color overrides needed - colors come from the generated navbar CSS
+      console.log('[Navbar] Mobile button colors preserved from Claude CSS (luminance:', luminance.toFixed(2) + ')');
+      
+      // FIX ICON SIZES - Ensure SVGs are properly sized and visible
+      // INJECT CRITICAL CSS TO OVERRIDE ANY CONFLICTING RULES
+      const criticalCSS = document.createElement('style');
+      criticalCSS.id = 'zappy-mobile-nav-fix';
+      const htmlLang = document.documentElement.lang || 'en';
+      const htmlDir = document.documentElement.dir || 'ltr';
+      // Check both dir attribute AND lang for RTL detection
+      // dir="rtl" is the most reliable indicator
+      const isRTL = htmlDir === 'rtl' || htmlLang === 'he' || htmlLang === 'ar';
+      
+      criticalCSS.textContent = `
+        /* Hide mobile buttons on desktop, show only on mobile */
+        @media (min-width: 769px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            display: none !important;
+          }
+        }
+        
+        /* Show and position mobile buttons correctly on mobile */
+        @media (max-width: 768px) {
+          .navbar,
+          nav.navbar {
+            min-height: 70px !important;
+          }
+
+          .mobile-toggle,
+          .phone-header-btn {
+            position: absolute !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin-top: auto !important;
+            margin-bottom: auto !important;
+            transform: none !important;
+            z-index: 1001 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            cursor: pointer !important;
+            padding: 6px !important;
+            background: none !important;
+            color: var(--nav-text, var(--text-dark)) !important;
+            touch-action: manipulation !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
+
+          html[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          body[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] header .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] nav .phone-header-btn {
+            display: none !important;
+            visibility: hidden !important;
+            width: 0 !important;
+            height: 0 !important;
+            min-width: 0 !important;
+            overflow: hidden !important;
+          }
+          
+          /* LTR positioning (default): hamburger LEFT, phone RIGHT */
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .mobile-toggle,
+          html[dir="ltr"] .mobile-toggle {
+            left: 12px !important;
+            right: auto !important;
+          }
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .phone-header-btn,
+          html[dir="ltr"] .phone-header-btn {
+            right: 12px !important;
+            left: auto !important;
+          }
+          
+          /* RTL positioning: hamburger RIGHT, phone LEFT */
+          html[dir="rtl"] .mobile-toggle,
+          html[lang="he"] .mobile-toggle,
+          html[lang="ar"] .mobile-toggle {
+            right: 12px !important;
+            left: auto !important;
+          }
+          html[dir="rtl"] .phone-header-btn,
+          html[lang="he"] .phone-header-btn,
+          html[lang="ar"] .phone-header-btn {
+            left: 12px !important;
+            right: auto !important;
+          }
+          
+          /* CRITICAL: Ensure nav-container has min-height on mobile */
+          /* All children are positioned absolutely/fixed on mobile, so height:auto collapses to 0 */
+          .nav-container {
+            min-height: 70px !important;
+            position: relative !important;
+          }
+          
+          /* Ensure SVG icons are properly sized and inherit color */
+          .mobile-toggle svg,
+          .phone-header-btn svg {
+            width: 24px !important;
+            height: 24px !important;
+            /* Don't force display - let JavaScript control hamburger/close toggle */
+          }
+          
+          /* Reset nav-cta-container on mobile - remove desktop box-shadow/padding */
+          /* that creates a visible ghost box when CTA button is hidden */
+          .nav-cta-container {
+            box-shadow: none !important;
+            padding: 0 !important;
+          }
+          
+          /* Hide nav-cta-container entirely on mobile when there's no lang-switcher */
+          /* (only the CTA button is inside, and it's hidden on mobile) */
+          .nav-cta-container:not(:has(.lang-switcher)) {
+            display: none !important;
+          }
+          
+          /* CRITICAL: Prevent hero image fade gradient from bleeding over headline text */
+          /* The .image-fade-gradient has bottom: -30px (extends below parent) */
+          /* On mobile stacked layout, this overlaps the h1 text below the image */
+          .hero-image-column {
+            overflow: hidden !important;
+          }
+          .image-fade-gradient {
+            bottom: 0 !important;
+          }
+          
+          /* Hide desktop language switcher on mobile - hamburger menu handles it */
+          /* High specificity to override stored CSS */
+          .lang-switcher,
+          .nav-cta-container .lang-switcher,
+          .nav-container .lang-switcher,
+          .navbar .lang-switcher,
+          .navbar .nav-cta-container .lang-switcher {
+            display: none !important;
+          }
+        }
+      `;
+      
+      // Remove existing fix if present and inject new one
+      const existing = document.getElementById('zappy-mobile-nav-fix');
+      if (existing) existing.remove();
+      document.head.appendChild(criticalCSS);
+      
+      console.log('[Navbar] Critical CSS injected for mobile nav positioning');
+      
+      // ONLY apply inline positioning styles on mobile viewport
+      // On desktop, the CSS handles hiding these buttons with display: none
+      // Inline styles were breaking desktop layout by overriding CSS
+      const isMobileViewport = window.innerWidth <= 768;
+      
+      if (mobileToggle) {
+        // Icon sizing applies to all viewports for consistency
+        const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+        const closeIcon = mobileToggle.querySelector('.close-icon');
+        
+        if (hamburgerIcon) {
+          hamburgerIcon.style.setProperty('width', '24px', 'important');
+          hamburgerIcon.style.setProperty('height', '24px', 'important');
+          hamburgerIcon.style.setProperty('display', 'block', 'important'); // Show hamburger by default
+        }
+        if (closeIcon) {
+          closeIcon.style.setProperty('width', '24px', 'important');
+          closeIcon.style.setProperty('height', '24px', 'important');
+          closeIcon.style.setProperty('display', 'none', 'important'); // Hide close icon by default
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          mobileToggle.style.setProperty('position', 'absolute', 'important');
+          mobileToggle.style.setProperty('top', '0', 'important');
+          mobileToggle.style.setProperty('bottom', '0', 'important');
+          mobileToggle.style.setProperty('margin-top', 'auto', 'important');
+          mobileToggle.style.setProperty('margin-bottom', 'auto', 'important');
+          mobileToggle.style.setProperty('transform', 'none', 'important');
+          mobileToggle.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          
+          console.log('[Navbar] Mobile toggle positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          mobileToggle.style.removeProperty('position');
+          mobileToggle.style.removeProperty('top');
+          mobileToggle.style.removeProperty('transform');
+          mobileToggle.style.removeProperty('z-index');
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared mobile toggle inline positioning');
+        }
+      }
+      
+      if (phoneBtn) {
+        // Icon sizing applies to all viewports
+        const phoneIcon = phoneBtn.querySelector('svg');
+        if (phoneIcon) {
+          phoneIcon.style.width = '24px';
+          phoneIcon.style.height = '24px';
+          phoneIcon.setAttribute('width', '24');
+          phoneIcon.setAttribute('height', '24');
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          phoneBtn.style.setProperty('position', 'absolute', 'important');
+          phoneBtn.style.setProperty('top', '0', 'important');
+          phoneBtn.style.setProperty('bottom', '0', 'important');
+          phoneBtn.style.setProperty('margin-top', 'auto', 'important');
+          phoneBtn.style.setProperty('margin-bottom', 'auto', 'important');
+          phoneBtn.style.setProperty('transform', 'none', 'important');
+          phoneBtn.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          
+          console.log('[Navbar] Phone button positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          phoneBtn.style.removeProperty('position');
+          phoneBtn.style.removeProperty('top');
+          phoneBtn.style.removeProperty('transform');
+          phoneBtn.style.removeProperty('z-index');
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared phone button inline positioning');
+        }
+      }
+    } else {
+      console.log('[Navbar] Could not parse background color:', bgColor);
+    }
+    
+    // MOBILE MENU TOGGLE
+    // Re-query in case DOM changed (mobileToggle already declared at top of function)
+    mobileToggle = document.getElementById('mobileToggle') ||
+                   document.querySelector('.mobile-toggle') ||
+                   document.querySelector('.hamburger') ||
+                   document.querySelector('.hamburger-menu') ||
+                   document.querySelector('.menu-toggle') ||
+                   document.querySelector('.burger-menu') ||
+                   document.querySelector('[aria-label="Menu"]') ||
+                   document.querySelector('[aria-label="תפריט"]');
+    
+    // EXPANDED SEARCH: Find nav menu by ID or class
+    const navMenu = document.getElementById('navMenu') ||
+                  document.querySelector('.nav-menu') ||
+                  document.querySelector('.nav-links') ||
+                  document.querySelector('nav ul:not(.submenu)');
+    
+    if (!mobileToggle || !navMenu) {
+      console.log('[Navbar] Mobile toggle or menu not found:', { toggle: !!mobileToggle, menu: !!navMenu });
+      return;
+    }
+    
+    // Ensure navMenu has ID for CSS targeting
+    if (!navMenu.id) {
+      navMenu.id = 'navMenu';
+    }
+    
+    console.log('[Navbar] Initializing mobile menu...');
+    
+    // Remove any existing event listeners by cloning the button
+    const newToggle = mobileToggle.cloneNode(true);
+    mobileToggle.parentNode.replaceChild(newToggle, mobileToggle);
+    
+    // Toggle menu handler (shared by click and touchend)
+    function handleToggle(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+      const closeIcon = newToggle.querySelector('.close-icon');
+      const isActive = navMenu.classList.contains('active');
+      
+      if (isActive) {
+        // Close menu
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed');
+      } else {
+        // Open menu
+        navMenu.classList.add('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'none', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'block', 'important');
+        document.body.style.overflow = 'hidden';
+        console.log('[Navbar] Menu opened');
+      }
+    }
+    
+    // Use click for desktop/emulation and touchend as iOS Safari fallback.
+    // Prevent double-fire with a timestamp guard.
+    var lastToggleTime = 0;
+    function guardedToggle(e) {
+      var now = Date.now();
+      if (now - lastToggleTime < 300) return;
+      lastToggleTime = now;
+      handleToggle(e);
+    }
+    
+    newToggle.addEventListener('click', guardedToggle);
+    newToggle.addEventListener('touchend', guardedToggle);
+    
+    // Close menu when clicking nav links (but NOT dropdown toggles)
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        // Don't close if it's a dropdown child (unless it's a real navigation link)
+        if (this.getAttribute('href') === '#') return;
+        
+        const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+        const closeIcon = newToggle.querySelector('.close-icon');
+        
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed (link clicked)');
+      });
+    });
+    
+    // DROPDOWN MENU TOGGLE (for mobile and touch devices)
+    var dropdownToggles = navMenu.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var parent = this.closest('.nav-dropdown');
+        if (!parent) return;
+        
+        // Close other open dropdowns at the same level
+        var siblings = parent.parentNode.querySelectorAll('.nav-dropdown.open');
+        siblings.forEach(function(sib) {
+          if (sib !== parent) sib.classList.remove('open');
+        });
+        
+        parent.classList.toggle('open');
+        console.log('[Navbar] Dropdown toggled:', parent.classList.contains('open') ? 'open' : 'closed');
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        var openDropdowns = document.querySelectorAll('.nav-dropdown.open');
+        openDropdowns.forEach(function(dd) { dd.classList.remove('open'); });
+      }
+    });
+    
+    console.log('[Navbar] Dropdown handlers initialized for ' + dropdownToggles.length + ' dropdowns');
+    
+    // Phone button functionality (phoneBtn already declared at top of function)
+    if (phoneBtn) {
+      phoneBtn.addEventListener('click', function() {
+        // Get phone number from placeholder in page or use default
+        const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+        const phoneNumber = phoneLinks.length > 0 
+          ? phoneLinks[0].getAttribute('href').replace('tel:', '')
+          : '[business_phone]';
+        
+        window.location.href = 'tel:' + phoneNumber;
+        console.log('[Navbar] Phone button clicked');
+      });
+    }
+    
+    console.log('[Navbar] Mobile menu initialized successfully');
+    
+    // WhatsApp button visibility is now controlled via CSS (siteSettings).
+    // No JS-based desktop hiding — the button is visible on both mobile and desktop by default.
+  });
+})();
+
+</script>
+  
+  <main id="main">
+    <section class="products-uses-intro-section" data-layout-spec="מוצרים ושימושים-intro">
+  <div class="products-uses-intro-section__container">
+    <!-- Header Block -->
+    <header class="intro-header">
+      <p class="intro-label">המגוון שלנו</p>
+      <h1 class="intro-heading">כלים שמכבדים כל אירוע</h1>
+      <p class="intro-description">
+        ב"אור החיים הקדוש" אנחנו מאמינים שכל מפגש משפחתי, חג או אירוע מוסדי ראוי לעריכת שולחן יפה, נוחה ופרקטית. 
+        אנחנו מציעים מגוון רחב של כלים חד־פעמיים ורב־פעמיים – מצלחות הגשה מרשימות ועד כוסות חמות וקרות, קעריות וסכו"ם – 
+        שמתאימים בדיוק לסגנון האירוח שלכם. השילוב בין נוחות, מראה מוקפד ופתרונות אחסון חכמים מאפשר לכם להתפנות למה שבאמת חשוב – לארח בלב שלם.
+      </p>
+    </header>
+
+    <!-- Product-Use Mosaic Grid -->
+    <div class="mosaic-grid">
+      
+      <!-- Tile 1: Image Focus -->
+      <article class="mosaic-tile mosaic-tile--image">
+        <figure class="tile-figure">
+          <img loading="eager" fetchpriority="high" data-placeholder="products-uses-intro-image-1" data-context="An inviting Shabbat table setting featuring elegant gold-rimmed disposable plates, clear crystal-look cups, and matching cutlery arranged on a cream linen tablecloth with soft natural window light." width="600" height="400" src="/assets/site-products-uses-intro-image-1.webp" alt="עריכת שולחן שבת עם כלים חד פעמיים אלגנטיים">
+        </figure>
+        <div class="tile-caption">
+          <h3>עריכת שולחן חגיגית</h3>
+          <p>צלחות הגשה מרשימות וכוסות יין שקופות שהופכות כל ארוחת חג לחוויה מעוצבת – בלי להתפשר על ניקיון קל.</p>
+        </div>
+      </article>
+
+      <!-- Tile 2: Text Focus -->
+      <article class="mosaic-tile mosaic-tile--text">
+        <div class="tile-content">
+          <span class="tile-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 4C10.48 4 6 8.48 6 14C6 19.52 16 28 16 28C16 28 26 19.52 26 14C26 8.48 21.52 4 16 4ZM16 18C13.79 18 12 16.21 12 14C12 11.79 13.79 10 16 10C18.21 10 20 11.79 20 14C20 16.21 18.21 18 16 18Z" fill="currentColor"></path>
+            </svg>
+          </span>
+          <h3>התאמה לכל גודל אירוע</h3>
+          <p>בין אם אתם מארחים ארוחה משפחתית מצומצמת או כנס מוסדי רחב היקף – אצלנו תמצאו מגוון אריזות ומארזים שמתאימים בדיוק לכמות האורחים שלכם.</p>
+        </div>
+      </article>
+
+      <!-- Tile 3: Image Focus -->
+      <article class="mosaic-tile mosaic-tile--image">
+        <figure class="tile-figure">
+          <img loading="lazy" decoding="async" data-placeholder="products-uses-intro-image-2" data-context="A cheerful kids birthday party table with colorful reusable melamine plates, matching cups, and fun-shaped cutlery, surrounded by balloons and party decorations in a sunlit garden." width="600" height="400" src="/assets/site-products-uses-intro-image-2.webp" alt="שולחן יום הולדת לילדים עם כלים צבעוניים רב פעמיים">
+        </figure>
+        <div class="tile-caption">
+          <h3>מסיבות וימי הולדת</h3>
+          <p>כלים צבעוניים, קלים ועמידים שמכניסים שמחה לשולחן – מושלמים לילדים ולמבוגרים כאחד.</p>
+        </div>
+      </article>
+
+      <!-- Tile 4: Text Focus -->
+      <article class="mosaic-tile mosaic-tile--text">
+        <div class="tile-content">
+          <span class="tile-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 2L20.12 10.44L29.44 11.8L22.72 18.36L24.3 27.6L16 23.2L7.7 27.6L9.28 18.36L2.56 11.8L11.88 10.44L16 2Z" fill="currentColor"></path>
+            </svg>
+          </span>
+          <h3>חומרים איכותיים ובטוחים</h3>
+          <p>כל המוצרים שלנו עומדים בתקנים מחמירים. אנחנו בוחרים חומרים יציבים שלא מתקפלים, לא דולפים ושומרים על מראה יפה לאורך כל האירוע.</p>
+        </div>
+      </article>
+
+      <!-- Tile 5: Image Focus -->
+      <article class="mosaic-tile mosaic-tile--image">
+        <figure class="tile-figure">
+          <img loading="lazy" decoding="async" data-placeholder="products-uses-intro-image-3" data-context="A close-up of a catering buffet setup with stackable white disposable bowls, clear cups for hot and cold drinks, and neatly arranged cutlery sets on a wooden serving table at an outdoor corporate event." width="600" height="400" src="/assets/site-products-uses-intro-image-3.webp" alt="מזנון קייטרינג עם כלים חד פעמיים לאירוע עסקי">
+        </figure>
+        <div class="tile-caption">
+          <h3>קייטרינג וכנסים</h3>
+          <p>פתרונות הגשה חכמים לאירועים עסקיים – קעריות, כוסות וסכו"ם שמאפשרים הגשה מהירה, אלגנטית ונוחה לפינוי.</p>
+        </div>
+      </article>
+
+      <!-- Tile 6: Text Focus -->
+      <article class="mosaic-tile mosaic-tile--text">
+        <div class="tile-content">
+          <span class="tile-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M27 4H5C3.34 4 2 5.34 2 7V25C2 26.66 3.34 28 5 28H27C28.66 28 30 26.66 30 25V7C30 5.34 28.66 4 27 4ZM16 18C13.24 18 11 15.76 11 13C11 10.24 13.24 8 16 8C18.76 8 21 10.24 21 13C21 15.76 18.76 18 16 18ZM8 24C8 20.69 13.33 18.8 16 18.8C18.67 18.8 24 20.69 24 24H8Z" fill="currentColor"></path>
+            </svg>
+          </span>
+          <h3>שירות אישי ומהיר</h3>
+          <p>הצוות שלנו ישמח לייעץ לכם בבחירת הכלים המתאימים לאופי האירוע, לסגנון שלכם ולתקציב. אנחנו כאן כדי להפוך את חוויית הקנייה לפשוטה ומהנה.</p>
+        </div>
+      </article>
+
+      <!-- Tile 7: Image Focus (Wide) -->
+      <article class="mosaic-tile mosaic-tile--image mosaic-tile--wide">
+        <figure class="tile-figure">
+          <img loading="lazy" decoding="async" data-placeholder="products-uses-intro-image-4" data-context="A flat lay of various disposable tableware items including bamboo-look plates, kraft paper bowls, clear plastic cups, and wooden cutlery, arranged on a light wood table with fresh herbs and linen napkins." width="1200" height="400" src="/assets/site-products-uses-intro-image-4.webp" alt="מגוון כלים חד פעמיים במראה טבעי על רקע עץ">
+        </figure>
+        <div class="tile-caption">
+          <h3>מגוון חומרים וטקסטורות</h3>
+          <p>ממראה במבוק טבעי ועד פלסטיק שקוף ואלגנטי – אנחנו מציעים מגוון רחב של גימורים שמתאימים לכל סוג אירוח, מקרי ועד יוקרתי.</p>
+        </div>
+      </article>
+
+      <!-- Tile 8: Text Focus -->
+      <article class="mosaic-tile mosaic-tile--text">
+        <div class="tile-content">
+          <span class="tile-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 2C8.28 2 2 8.28 2 16C2 23.72 8.28 30 16 30C23.72 30 30 23.72 30 16C30 8.28 23.72 2 16 2ZM22.12 12.12L14.12 20.12C13.73 20.51 13.1 20.51 12.71 20.12L9.88 17.29C9.49 16.9 9.49 16.27 9.88 15.88C10.27 15.49 10.9 15.49 11.29 15.88L13.41 18L20.71 10.71C21.1 10.32 21.73 10.32 22.12 10.71C22.51 11.1 22.51 11.73 22.12 12.12Z" fill="currentColor"></path>
+            </svg>
+          </span>
+          <h3>נוחות שאין שנייה לה</h3>
+          <p>כלים קלים לאחסון, עמידים בערימה, ולא דורשים שטיפה. כך תוכלו להקדיש את הזמן היקר שלכם למה שחשוב – ליהנות יחד עם האורחים.</p>
+        </div>
+      </article>
+
+      <!-- Tile 9: Image Focus -->
+      <article class="mosaic-tile mosaic-tile--image">
+        <figure class="tile-figure">
+          <img loading="lazy" decoding="async" data-placeholder="products-uses-intro-image-5" data-context="A cozy winter holiday gathering scene with hot drink cups, dessert plates with pastries, and warm fairy lights, creating an intimate atmosphere around a wooden coffee table." width="600" height="400" src="/assets/site-products-uses-intro-image-5.webp" alt="מפגש חורפי עם כוסות חמות וצלחות קינוח">
+        </figure>
+        <div class="tile-caption">
+          <h3>לכל עונה ולכל חג</h3>
+          <p>מכוסות תרמיות למרק חם בחורף ועד צלחות קינוח קלילות לקיץ – אנחנו דואגים שתמיד יהיה לכם את הכלי המתאים.</p>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- CTA -->
+    <div class="intro-cta">
+      <a href="/contact" class="btn-primary">צרו קשר לייעוץ והזמנה</a>
+    </div>
+  </div>
+
+  <!-- Bottom Divider: Diagonal Soft Fade -->
+  <div class="products-uses-intro-section__divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="diagonalFade" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="var(--bg-dark)" stop-opacity="0.15"></stop>
+          <stop offset="100%" stop-color="var(--bg-dark)" stop-opacity="0.35"></stop>
+        </linearGradient>
+      </defs>
+      <path d="M0,80 L0,0 Q300,80 600,40 T1200,0 L1200,80 Z" fill="#FAF6F0"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="products-uses-services-section" data-layout-spec="מוצרים ושימושים-services">
+  <div class="products-uses-services-section__container">
+    
+    <!-- Content Column (Right in RTL) -->
+    <div class="products-uses-services-section__content">
+      <h2 class="products-uses-services-section__heading">פתרונות מושלמים לכל אירוע</h2>
+      
+      <div class="products-uses-services-section__items">
+        
+        <!-- Item 1 -->
+        <div class="products-uses-services-section__item">
+          <div class="products-uses-services-section__item-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <div class="products-uses-services-section__item-text">
+            <h3 class="products-uses-services-section__item-title">חד פעמי איכותי – ניקיון מהיר</h3>
+            <p class="products-uses-services-section__item-desc">מגוון צלחות, כוסות וסכו"ם חד פעמיים שמאפשרים לכם ליהנות מהאירוע בלי לדאוג לשטיפת כלים. פתרון מושלם למסיבות גינה, ימי הולדת ואירועים גדולים.</p>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="products-uses-services-section__item">
+          <div class="products-uses-services-section__item-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 7H4C2.89543 7 2 7.89543 2 9V19C2 20.1046 2.89543 21 4 21H20C21.1046 21 22 20.1046 22 19V9C22 7.89543 21.1046 7 20 7Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M16 21V5C16 4.46957 15.7893 3.96086 15.4142 3.58579C15.0391 3.21071 14.5304 3 14 3H10C9.46957 3 8.96086 3.21071 8.58579 3.58579C8.21071 3.96086 8 4.46957 8 5V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <div class="products-uses-services-section__item-text">
+            <h3 class="products-uses-services-section__item-title">רב פעמי מרשים – הגשה מושקעת</h3>
+            <p class="products-uses-services-section__item-desc">צלחות וקעריות רב פעמיות בעיצוב אלגנטי שמשדרגות כל שולחן חג. מתאימות לאירועי ערב, ארוחות חג משפחתיות וקבלות פנים.</p>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="products-uses-services-section__item">
+          <div class="products-uses-services-section__item-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 8H19C20.1046 8 21 8.89543 21 10V20C21 21.1046 20.1046 22 19 22H5C3.89543 22 3 21.1046 3 20V10C3 8.89543 3.89543 8 5 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M12 1V15M12 15L8 11M12 15L16 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M8 8C8 5.79086 9.79086 4 12 4C14.2091 4 16 5.79086 16 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+          </div>
+          <div class="products-uses-services-section__item-text">
+            <h3 class="products-uses-services-section__item-title">כוסות חמות – עמדת שתייה מושלמת</h3>
+            <p class="products-uses-services-section__item-desc">כוסות תרמיות וחד פעמיות למשקאות חמים, אידיאליות לעמדת קפה ותה באירועי בוקר, כנסים או מפגשים משפחתיים בחורף.</p>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="products-uses-services-section__item">
+          <div class="products-uses-services-section__item-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M8 12L12 8L16 12L12 16L8 12Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M12 8V2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M12 22V16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <div class="products-uses-services-section__item-text">
+            <h3 class="products-uses-services-section__item-title">קר ומזנון – הגשה נוחה ורעננה</h3>
+            <p class="products-uses-services-section__item-desc">כוסות קרות, קעריות ומגשי הגשה שמתאימים לבופה עשיר. מושלם לאירועי קיץ, קידושים ושבתות עם מגוון סלטים ושתייה קלה.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Image Column (Left in RTL) -->
+    <div class="products-uses-services-section__images">
+      <div class="products-uses-services-section__image-wrapper products-uses-services-section__image-wrapper--front">
+        <img loading="lazy" decoding="async" data-placeholder="products-uses-services-image-1" data-context="A warm, top-down flat lay of elegant disposable and reusable tableware for a family gathering: textured linen napkin, stacked olive-green and cream plates, a bundle of wooden cutlery tied with twine, and a ceramic bowl. Natural daylight, soft shadows, editorial composition." width="600" height="400" src="/assets/site-products-uses-services-image-1.webp" alt="צלחות איכותיות וסכו" ם="" מעוצב="" לאירוח="" מושלם"="">
+      </div>
+      <div class="products-uses-services-section__image-wrapper products-uses-services-section__image-wrapper--back">
+        <img loading="lazy" decoding="async" data-placeholder="products-uses-services-image-2" data-context="Close-up side angle of a festive buffet setup: a hand reaching for a clear cold cup next to a stack of warm-toned disposable bowls, with soft bokeh lights in the background. Cozy, inviting atmosphere." width="500" height="350" src="/assets/site-products-uses-services-image-2.webp" alt="כוסות קרות ומזנון עשיר לאירוע מושלם">
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Divider -->
+  <div class="products-uses-services-section__divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,60 L0,30 Q60,25 120,28 T240,26 Q300,30 360,25 T480,28 Q540,26 600,30 T720,25 Q780,30 840,28 T960,26 Q1020,30 1080,25 T1200,30 L1200,60 Z" fill="var(--bg-light)"></path>
+    </svg>
+  </div>
+
+</section>
+
+<section class="products-uses-audiences-section" data-layout-spec="מוצרים ושימושים-audiences" dir="rtl">
+  <div class="products-uses-audiences-section__container">
+    <div class="products-uses-audiences-section__header">
+      <h2 class="products-uses-audiences-section__title">לכל אירוע, לכל קהל – <span class="products-uses-audiences-section__title-accent">הפתרון המושלם</span></h2>
+      <p class="products-uses-audiences-section__subtitle">משפחות, עסקים ומוסדות סומכים עלינו כבר שנים. אנו מציעים מגוון רחב של כלים חד-פעמיים ורב-פעמיים שמתאימים בדיוק לצרכים שלכם – בחגים, באירועים משפחתיים, במשרד או במוסדות חינוך וקהילה.</p>
+    </div>
+
+    <div class="products-uses-audiences-section__grid">
+      
+      <!-- Card 1: Private Customers -->
+      <article class="products-uses-audiences-section__card">
+        <div class="products-uses-audiences-section__card-image-band">
+          <img loading="lazy" decoding="async" data-placeholder="products-uses-audiences-image-1" data-context="A warm, inviting home dining table set for a family holiday dinner in Israel, featuring elegant disposable plates, cups, and cutlery from the brand, with natural lighting, challah bread, and wine glasses, lifestyle photography" width="600" height="400" src="/assets/site-products-uses-audiences-image-1.webp" alt="עריכת שולחן חג משפחתית עם כלים חד-פעמיים אלגנטיים" class="products-uses-audiences-section__card-image">
+        </div>
+        <div class="products-uses-audiences-section__card-body">
+          <div class="products-uses-audiences-section__card-accent"></div>
+          <h3 class="products-uses-audiences-section__card-title">לקוחות פרטיים</h3>
+          <p class="products-uses-audiences-section__card-text">מארחים את החג או חוגגים יום הולדת? אצלנו תמצאו את כל מה שצריך לעריכת שולחן מושלמת – צלחות חד-פעמיות מהודרות, כוסות חמות וקרות, קעריות וסכו"ם איכותי. אנחנו דואגים לנוחות המרבית כדי שתוכלו להתפנות לחגוג עם המשפחה והחברים, בלי להתעסק בכביסה אחרי האירוע.</p>
+        </div>
+      </article>
+
+      <!-- Card 2: Business Customers -->
+      <article class="products-uses-audiences-section__card">
+        <div class="products-uses-audiences-section__card-image-band">
+          <img loading="lazy" decoding="async" data-placeholder="products-uses-audiences-image-2" data-context="A modern office kitchenette or refreshment station with a neat stack of branded disposable cups, plates, and cutlery, coffee machine in background, clean and organized professional environment" width="600" height="400" src="/assets/site-products-uses-audiences-image-2.webp" alt="פינת קפה משרדית מאובזרת בכלים חד-פעמיים" class="products-uses-audiences-section__card-image">
+        </div>
+        <div class="products-uses-audiences-section__card-body">
+          <div class="products-uses-audiences-section__card-accent"></div>
+          <h3 class="products-uses-audiences-section__card-title">לקוחות עסקיים</h3>
+          <p class="products-uses-audiences-section__card-text">ציוד משרדי שוטף דורש אמינות וזמינות. אנו מספקים פתרונות מלאים למטבחונים, חדרי ישיבות ואירועי חברה – כוסות לשתייה חמה וקרה, צלחות לארוחות צהריים וסכו"ם חד-פעמי. מחירים תחרותיים, אספקה מהירה ושירות אישי שהופכים את ההתנהלות השוטפת לקלה ונוחה.</p>
+        </div>
+      </article>
+
+      <!-- Card 3: Institutions & Organizations -->
+      <article class="products-uses-audiences-section__card">
+        <div class="products-uses-audiences-section__card-image-band">
+          <img loading="lazy" decoding="async" data-placeholder="products-uses-audiences-image-3" data-context="A community center or school event setup with long tables covered in white tablecloths, arranged with stacks of durable disposable plates, cups, and cutlery ready for a large group, bright and cheerful atmosphere" width="600" height="400" src="/assets/site-products-uses-audiences-image-3.webp" alt="אירוע קהילתי מאורגן עם כלים חד-פעמיים" class="products-uses-audiences-section__card-image">
+        </div>
+        <div class="products-uses-audiences-section__card-body">
+          <div class="products-uses-audiences-section__card-accent"></div>
+          <h3 class="products-uses-audiences-section__card-title">מוסדות וארגונים</h3>
+          <p class="products-uses-audiences-section__card-text">בתי ספר, גני ילדים, בתי כנסת ומרכזים קהילתיים זקוקים לפתרונות הגשה מעשיים וחסכוניים. אנו מציעים מגוון רחב של כלים רב-פעמיים וחד-פעמיים בהיקפים גדולים, המותאמים במיוחד לאירועים המוניים, חלוקת מזון ופעילות שוטפת. איכות ללא פשרות במחיר שמתאים לתקציב המוסדי.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- Bottom Divider: Torn-edge cream paper reveal transitioning to next darker section -->
+  <div class="products-uses-audiences-section__divider-wrapper" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,80 L0,45 Q15,38 35,46 T65,42 Q85,48 110,41 T145,47 Q170,39 195,45 T230,40 Q255,47 285,43 T320,46 Q345,38 370,44 T405,40 Q430,48 460,42 T495,47 Q520,39 545,45 T580,41 Q605,48 635,43 T670,46 Q695,38 720,44 T755,40 Q780,47 810,42 T845,46 Q870,39 895,44 T930,41 Q955,48 985,43 T1020,46 Q1045,38 1070,44 T1105,40 Q1130,47 1160,42 T1190,45 L1200,45 L1200,80 Z" fill="var(--bg-dark)"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="products-uses-showcase-section" data-layout-spec="מוצרים ושימושים-showcase">
+  <div class="products-uses-showcase-section__container">
+    <header class="products-uses-showcase-section__header">
+      <h2>סטיילינג שולחן — השראה לאירוע שלכם</h2>
+      <p>סצנות מעוצבות שמראות איך כלים חד-פעמיים איכותיים משתלבים באווירה חגיגית, חמה ומעשית — בלי להתפשר על יופי.</p>
+    </header>
+    <div class="products-uses-showcase-section__gallery">
+      <!-- Scene 1: Holiday Table -->
+      <article class="products-uses-showcase-section__card">
+        <div class="products-uses-showcase-section__image-frame">
+          <img loading="lazy" decoding="async" data-placeholder="products-uses-showcase-image-1" data-context="A warm holiday dinner table set with elegant disposable plates, gold-rimmed cups, and folded linen napkins, bathed in soft natural window light. Candles and seasonal decorations complete the inviting atmosphere." width="600" height="400" src="/assets/site-products-uses-showcase-image-1.webp" alt="שולחן חג מעוצב עם כלים חד פעמיים אלגנטיים">
+        </div>
+        <div class="products-uses-showcase-section__caption">
+          <h3>שולחן חג אלגנטי</h3>
+          <p>צלחות הגשה רחבות, כוסות יין שקופות וסכו"ם במראה מתכתי יוצרים תחושת יוקרה שמתאימה לארוחות חג משפחתיות ולסעודות שבת.</p>
+        </div>
+      </article>
+      <!-- Scene 2: Birthday Dessert Station -->
+      <article class="products-uses-showcase-section__card">
+        <div class="products-uses-showcase-section__image-frame">
+          <img loading="lazy" decoding="async" data-placeholder="products-uses-showcase-image-2" data-context="A cheerful birthday dessert station with colorful disposable plates, small treat bowls filled with candies, and a tiered cake stand. Balloons and confetti add a celebratory feel, with gentle daylight streaming in." width="600" height="400" src="/assets/site-products-uses-showcase-image-2.webp" alt="עמדת קינוחים ליום הולדת עם כלים חד פעמיים צבעוניים">
+        </div>
+        <div class="products-uses-showcase-section__caption">
+          <h3>פינת מתוקים שמחה</h3>
+          <p>קעריות אישיות לממתקים, צלחות קינוח קטנות ומפיות צבעוניות — כל מה שצריך לעמדת יומולדת מתוקה ומסודרת שהילדים אוהבים.</p>
+        </div>
+      </article>
+      <!-- Scene 3: Office Hospitality -->
+      <article class="products-uses-showcase-section__card">
+        <div class="products-uses-showcase-section__image-frame">
+          <img loading="lazy" decoding="async" data-placeholder="products-uses-showcase-image-3" data-context="A clean, modern office hospitality corner featuring a coffee station with disposable hot cups, small snack plates, and neatly stacked napkins on a wooden tray. Natural light and a potted plant create a calm, professional vibe." width="600" height="400" src="/assets/site-products-uses-showcase-image-3.webp" alt="פינת קפה משרדית מעוצבת עם כלים חד פעמיים">
+        </div>
+        <div class="products-uses-showcase-section__caption">
+          <h3>אירוח עסקי רגוע</h3>
+          <p>כוסות קפה חמות, צלוחיות לעוגיות ומגשי הגשה מעץ — פינת קפה שמשדרת מקצועיות וחמימות לעובדים ולאורחים גם יחד.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+  <div class="products-uses-showcase-section__divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,80 L0,25 Q100,35 200,22 T400,28 Q500,20 600,25 T800,20 Q900,28 1000,22 T1200,25 L1200,80 Z" fill="var(--bg-light)"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="products-uses-faq-section" data-layout-spec="מוצרים ושימושים-faq" dir="rtl">
+  <div class="faq-container">
+    <!-- Section Header -->
+    <h2>שאלות נפוצות על כלים חד-פעמיים</h2>
+    <p class="faq-subtitle">מתכננים אירוע? הנה התשובות לשאלות הכי חשובות כדי לבחור את הכלים המושלמים.</p>
+    
+    <!-- FAQ Grid -->
+    <div class="faq-grid">
+      <!-- Card 1 -->
+      <article class="faq-card">
+        <div class="faq-icon-wrapper">
+          <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+        </div>
+        <div class="faq-content">
+          <h3>מה ההבדל בין כלים חד-פעמיים לרב-פעמיים?</h3>
+          <p>כלים חד-פעמיים מיועדים לשימוש אחד ומאפשרים פינוי קל ומהיר. כלים רב-פעמיים עשויים מחומרים עמידים יותר כמו פלסטיק קשיח ומתאימים לשימוש חוזר באירועים משפחתיים או מוסדיים.</p>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="faq-card">
+        <div class="faq-icon-wrapper">
+          <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        </div>
+        <div class="faq-content">
+          <h3>איך מתאימים כלים לסוג האירוע?</h3>
+          <p>למסיבות קוקטייל מומלץ לבחור צלחות קטנות וכוסות אלגנטיות. לארוחות חג משפחתיות כדאי לשלב צלחות גדולות עם קעריות לתוספות. אנו נשמח לעזור לכם לבנות סט מותאם אישית.</p>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="faq-card">
+        <div class="faq-icon-wrapper">
+          <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+        </div>
+        <div class="faq-content">
+          <h3>אילו כוסות מתאימות למשקאות חמים וקרים?</h3>
+          <p>למשקאות חמים אנו מציעים כוסות מבודדות או כוסות נייר כפולות. למשקאות קרים יש לנו כוסות פלסטיק שקופות במגוון גדלים, כולל כוסות עם מכסה לאירועי חוץ.</p>
+        </div>
+      </article>
+
+      <!-- Card 4 -->
+      <article class="faq-card">
+        <div class="faq-icon-wrapper">
+          <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        </div>
+        <div class="faq-content">
+          <h3>האם אתם מספקים גם למוסדות ועסקים?</h3>
+          <p>בהחלט. אור החיים הקדוש משרת גם לקוחות מוסדיים כמו אולמות אירועים, בתי אבות, משרדים ובתי ספר. אנו מציעים מחירי כמויות, משלוחים קבועים ומגוון רחב של מוצרים בהתאמה לצרכים שוטפים.</p>
+        </div>
+      </article>
+
+      <!-- Card 5 -->
+      <article class="faq-card">
+        <div class="faq-icon-wrapper">
+          <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><line x1="12" y1="18" x2="12" y2="22"></line></svg>
+        </div>
+        <div class="faq-content">
+          <h3>איך מתכננים תקציב נכון לכלים לאירוע?</h3>
+          <p>התחילו בהערכת מספר האורחים, סוגי המנות והמשקאות. אנו ממליצים להצטייד ב-15% רזרבה. צרו איתנו קשר לקבלת ייעוץ והצעת מחיר מותאמת אישית ללא עלות.</p>
+        </div>
+      </article>
+
+      <!-- Card 6 -->
+      <article class="faq-card">
+        <div class="faq-icon-wrapper">
+          <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </div>
+        <div class="faq-content">
+          <h3>האם הכלים עומדים בתקני איכות ובטיחות?</h3>
+          <p>כל המוצרים שלנו עומדים בתקנים המחמירים ביותר. אנו מקפידים על חומרים איכותיים ללא BPA, עמידים בחום ובקור, ומתאימים למגע עם מזון.</p>
+        </div>
+      </article>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="faq-cta-wrapper">
+      <p class="faq-cta-text">לא מצאתם תשובה? נשמח לעזור לכם לתכנן את האירוע המושלם.</p>
+      <a href="/contact" class="btn-primary">צרו קשר לייעוץ אישי <i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+    </div>
+  </div>
+
+  <!-- Decorative Texture Overlay -->
+  <div class="faq-decoration" aria-hidden="true"></div>
+</section>
+  </main>
+  
+  <footer class="site-footer" dir="rtl">
+  <div class="footer-container">
+    <div class="footer-grid">
+      <!-- Company Info -->
+      <div class="footer-col footer-brand-col">
+        <img src="/assets/party-supplies-disposable-tableware-logo.webp" alt="אור החיים הקדוש - כלים חד פעמי" class="logo">
+        <p class="footer-tagline">מביאים שמחה לכל שולחן – ציוד למסיבות וכלים חד פעמיים באיכות גבוהה, לאירועים קטנים וגדולים.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-col footer-links-col">
+        <h4>ניווט מהיר</h4>
+        <ul class="footer-links">
+          <li><a href="/">בית</a></li>
+          <li><a href="/products-uses">מוצרים ושימושים</a></li>
+          <li><a href="/about">אודות</a></li>
+          <li><a href="/contact">צור קשר</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="footer-col footer-contact-col">
+        <h4>צור קשר</h4>
+        <ul class="footer-contact">
+          <li>
+            <span class="contact-icon"><i class="fas fa-envelope"></i></span>
+            <span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span>
+          </li>
+          <li>
+            <span class="contact-icon"><i class="fas fa-phone"></i></span>
+            <span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span>
+          </li>
+          <li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+            <span class="contact-text">[business_address]</span></a></li>
+        </ul>
+      </div>
+
+      <!-- Business Hours -->
+      <div class="footer-col footer-hours-col">
+        <h4>שעות פעילות</h4>
+        <ul class="footer-hours">
+          <li><a href="/"><span class="hours-day">ימים א'–ה'</span> <span class="hours-time">09:00–18:00</span></a></li>
+          <li><a href="/"><span class="hours-day">יום ו'</span> <span class="hours-time">09:00–13:00</span></a></li>
+          <li><a href="/"><span class="hours-day">שבת</span> <span class="hours-time">סגור</span></a></li>
+        </ul>
+      </div>
+
+      <!-- Social Media -->
+      <div class="footer-col footer-social-col">
+        <h4>עקבו אחרינו</h4>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook" data-zappy-social-placeholder="true"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram" data-zappy-social-placeholder="true"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="WhatsApp" data-zappy-social-placeholder="true"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-left">
+        <p class="footer-copy">© 2026 אור החיים הקדוש - כלים חד פעמי. כל הזכויות שמורות.</p>
+      </div>
+      <div class="footer-bottom-right">
+        <a href="/privacy">מדיניות פרטיות</a>
+        <span class="divider">|</span>
+        <a href="/terms">תנאי שימוש</a>
+        <span class="divider">|</span>
+        <a href="/accessibility">נגישות</a>
+        <span class="divider">|</span>
+        <a href="https://zappy5.com" target="_blank" class="zappy-attribution">נוצר באמצעות Zappy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+  
+  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+</body>
+</html>
